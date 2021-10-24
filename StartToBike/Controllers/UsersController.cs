@@ -149,5 +149,15 @@ namespace StartToBike.Controllers
         {
             return _context.Users.Any(e => e.ID == id);
         }
+
+        public async Task<IActionResult> Login()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Register()
+        {
+            return View();
+        }
     }
 }
