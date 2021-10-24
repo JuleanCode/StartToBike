@@ -22,20 +22,51 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.ID)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.ID)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<div id="chartContainer"></div>
+
+<script type="text/javascript">
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                theme: "light2",
+                zoomEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Your weight progress"
+                },
+                data: [
+                {
+                    type: "line",
+                        dataPoints: [
+                        @foreach (var item in Model) {
+                        <text>
+                            { x: @item.ID, y: @item.Content },
+                        </text>
+                        }
+                    ],
+                }
+                ]
+            });
+            chart.render();
+        };
+</script>
+
+
