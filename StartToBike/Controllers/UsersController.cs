@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -155,9 +156,52 @@ namespace StartToBike.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(string email, string password)
+        {
+            if (_context.Users.Any(u => u.Email == email && u.Password == password))
+            {
+                var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == email);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    HttpContext.Session.SetString("CurentUserID", user.ID.ToString());
+                    HttpContext.Session.SetString("CurentUserRol", user.Rol.ToString());
+
+                    HttpContext.Session.GetString("CurentUserID");
+
+                    return RedirectToAction(nameof(Index)); //have to change this to the right page TODO
+                }
+            }
+            else
+            {
+                return RedirectToAction(nameof(Login));
+            }
+        }
+
         public async Task<IActionResult> Register()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register([Bind("ID,Name,Email,Password,Sex,Height,Age,WeightGoal,Rol")] User user)
+        {
+            user.Rol = 2;
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Login));
         }
     }
 }
