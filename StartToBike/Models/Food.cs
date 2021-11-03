@@ -9,6 +9,6 @@ namespace StartToBike.Models
         public string Description { get; set; }
         public int Calories { get; set; }
 
-        public virtual ICollection<Diet> Diets { get; set; }
+        public virtual List<DietFood> DietFoods { get; set; }
     }
 }

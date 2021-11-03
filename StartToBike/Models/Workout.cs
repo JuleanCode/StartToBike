@@ -9,6 +9,7 @@ namespace StartToBike.Models
         public int UserID { get; set; }
 
         public virtual User User { get; set; }
-        public virtual ICollection<Exercise> Exercises { get; set; }
+        public virtual List<Exercise> Exercises { get; set; }
+        public virtual List<WorkoutExercise> WorkoutExercises { get; set; }
     }
 }

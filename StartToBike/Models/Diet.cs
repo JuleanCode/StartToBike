@@ -9,6 +9,7 @@ namespace StartToBike.Models
         public int UserID { get; set; }
 
         public virtual User User { get; set; }
-        public virtual ICollection<Food> Foods { get; set; }
+        public virtual List<Food> Foods { get; set; }
+        public virtual List<DietFood> DietFoods { get; set; }
     }
 }

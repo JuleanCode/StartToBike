@@ -10,6 +10,6 @@ namespace StartToBike.Models
         public int Reps { get; set; }
         public int Sets { get; set; }
 
-        public virtual ICollection<Workout> Workouts { get; set; }
+        public virtual List<WorkoutExercise> WorkoutExercises { get; set; }
     }
 }
