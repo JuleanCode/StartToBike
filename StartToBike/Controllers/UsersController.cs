@@ -184,6 +184,13 @@ namespace StartToBike.Controllers
             }
         }
 
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction(nameof(Login));
+        }
+
+
         public async Task<IActionResult> Register()
         {
             return View();
