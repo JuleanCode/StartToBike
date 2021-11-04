@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -155,6 +156,55 @@ namespace StartToBike.Controllers
         private bool WorkoutExists(int id)
         {
             return _context.Workouts.Any(e => e.ID == id);
+        }
+
+        public async Task<IActionResult> UserWorkout()
+        {
+            var startToBikeContext = _context.Workouts.Where(d => d.UserID == Int32.Parse(HttpContext.Session.GetString("CurentUserID")))
+                                        .Include(df => df.WorkoutExercises).ThenInclude(f => f.Exercise);
+            return View(await startToBikeContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> UserWorkoutAdd()
+        {
+            return View(await _context.Exercises.ToListAsync());
+        }
+
+        public async Task<IActionResult> UserWorkoutAddFood(int id)
+        {
+            var userWorkout = _context.Workouts.Where(d => d.UserID == Int32.Parse(HttpContext.Session.GetString("CurentUserID")));
+            Workout temp = new Workout();
+
+            foreach (Workout workout in userWorkout)
+            {
+                temp = workout;
+            }
+
+
+            WorkoutExercise workoutExercise = new WorkoutExercise();
+            workoutExercise.ExerciseID = id;
+            workoutExercise.WorkoutID = temp.ID;
+
+            _context.Add(workoutExercise);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(UserWorkout));
+        }
+
+        public async Task<IActionResult> UserWorkoutDelete(int id)
+        {
+            var userWorkout = _context.Workouts.Where(d => d.UserID == Int32.Parse(HttpContext.Session.GetString("CurentUserID")));
+            Workout temp = new Workout();
+
+            foreach (Workout workout in userWorkout)
+            {
+                temp = workout;
+            }
+
+            var dep = _context.WorkoutExercises.Where(d => d.WorkoutID == temp.ID && d.ExerciseID == id).First();
+            _context.WorkoutExercises.Remove(dep);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(UserWorkout));
         }
     }
 }
