@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StartToBike.Data;
 using StartToBike.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace StartToBike.Controllers
 {
@@ -22,7 +23,8 @@ namespace StartToBike.Controllers
         // GET: Diets
         public async Task<IActionResult> Index()
         {
-            var startToBikeContext = _context.Diets.Include(d => d.User);
+            var startToBikeContext = _context.Diets.Where(d => d.UserID == Int32.Parse(HttpContext.Session.GetString("CurentUserID")))
+                                        .Include(df => df.DietFoods).ThenInclude(f => f.Food);
             return View(await startToBikeContext.ToListAsync());
         }
 
@@ -155,6 +157,55 @@ namespace StartToBike.Controllers
         private bool DietExists(int id)
         {
             return _context.Diets.Any(e => e.ID == id);
+        }
+
+        public async Task<IActionResult> UserDiet()
+        {
+            var startToBikeContext = _context.Diets.Where(d => d.UserID == Int32.Parse(HttpContext.Session.GetString("CurentUserID")))
+                                        .Include(df => df.DietFoods).ThenInclude(f => f.Food);
+            return View(await startToBikeContext.ToListAsync());
+        }
+        
+        public async Task<IActionResult> UserDietAdd()
+        {
+            return View(await _context.Foods.ToListAsync());
+        }
+
+        public async Task<IActionResult> UserDietAddFood(int id)
+        {
+            var userDiet = _context.Diets.Where(d => d.UserID == Int32.Parse(HttpContext.Session.GetString("CurentUserID")));
+            Diet temp = new Diet();
+
+            foreach(Diet diet in userDiet)
+            {
+                temp = diet;
+            }
+
+
+            DietFood dietFood = new DietFood();
+            dietFood.FoodID = id;
+            dietFood.DietID = temp.ID;
+
+            _context.Add(dietFood);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(UserDiet));
+        }
+
+        public async Task<IActionResult> UserDietDelete(int id)
+        {
+            var userDiet = _context.Diets.Where(d => d.UserID == Int32.Parse(HttpContext.Session.GetString("CurentUserID")));
+            Diet temp = new Diet();
+
+            foreach (Diet diet in userDiet)
+            {
+                temp = diet;
+            }
+
+            var dep = _context.DietFoods.Where(d => d.DietID == temp.ID && d.FoodID == id).First();
+            _context.DietFoods.Remove(dep);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(UserDiet));
         }
     }
 }

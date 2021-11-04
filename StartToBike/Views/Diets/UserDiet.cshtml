@@ -1,0 +1,42 @@
+﻿@model IEnumerable<StartToBike.Models.Diet>
+
+@{
+    ViewData["Title"] = "UserDiet";
+}
+
+<h1>Your diet</h1>
+
+<p>
+    <a asp-action="UserDietAdd">Add new food</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Calories
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var diet in Model)
+{
+    @foreach (var food in diet.DietFoods) { 
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => food.Food.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => food.Food.Calories)
+            </td>
+            <td>
+                <a asp-action="UserDietDelete" asp-route-id="@food.FoodID">Delete</a>
+            </td>
+        </tr>
+    }
+}
+    </tbody>
+</table>

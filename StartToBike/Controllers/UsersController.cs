@@ -173,7 +173,7 @@ namespace StartToBike.Controllers
                     HttpContext.Session.SetString("CurentUserID", user.ID.ToString());
                     HttpContext.Session.SetString("CurentUserRol", user.Rol.ToString());
 
-                    HttpContext.Session.GetString("CurentUserID");
+                    
 
                     return RedirectToAction(nameof(Index)); //have to change this to the right page TODO
                 }
@@ -206,9 +206,9 @@ namespace StartToBike.Controllers
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Login));
             }
-            return RedirectToAction(nameof(Login));
+            return RedirectToAction(nameof(Register));
         }
     }
 }

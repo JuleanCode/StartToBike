@@ -1,0 +1,36 @@
+﻿@model IEnumerable<StartToBike.Models.Food>
+
+@{
+    ViewData["Title"] = "UserDietAdd";
+}
+
+<h1>Add food to diet</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Calories)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Calories)
+            </td>
+            <td>
+                <a asp-action="UserDietAddFood" asp-route-id="@item.ID">Add</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
