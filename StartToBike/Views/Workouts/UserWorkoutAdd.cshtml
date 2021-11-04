@@ -1,0 +1,42 @@
+﻿@model IEnumerable<StartToBike.Models.Exercise>
+
+@{
+    ViewData["Title"] = "UserWorkoutAdd";
+}
+
+<h1>UserWorkoutAdd</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reps)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sets)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reps)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sets)
+            </td>
+            <td>
+                <a asp-action="UserWorkoutAddFood" asp-route-id="@item.ID">Add</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
