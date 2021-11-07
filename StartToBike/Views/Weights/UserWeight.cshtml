@@ -1,0 +1,62 @@
+﻿@model IEnumerable<StartToBike.Models.Weight>
+
+@{
+    ViewData["Title"] = "UserWeight";
+}
+
+<h1>UserWeight</h1>
+
+
+<h1>Door limitaties aan de gartis versie van CanvasJS kan de grafiek niet wergeven worden zoals gehoopt</h1>
+
+<p>
+    <a asp-action="UserAddWeight">Add weight</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div id="chartContainer"></div>
+
+<script type="text/javascript">
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                theme: "light2",
+                zoomEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Your achieved weight progress"
+                },
+                data: [
+                {
+                    type: "line",
+                        dataPoints: [
+                        @foreach (var item in Model) {
+                        <text>
+                            { x: @item.ID, y: @item.Content },
+                        </text>
+                        }
+                    ],
+                }
+                ]
+            });
+            chart.render();
+        };
+</script>

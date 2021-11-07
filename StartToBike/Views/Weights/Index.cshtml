@@ -41,30 +41,3 @@
     </tbody>
 </table>
 
-<div id="chartContainer"></div>
-
-<script type="text/javascript">
-        window.onload = function () {
-            var chart = new CanvasJS.Chart("chartContainer", {
-                theme: "light2",
-                zoomEnabled: true,
-                animationEnabled: true,
-                title: {
-                    text: "Your achieved weight progress"
-                },
-                data: [
-                {
-                    type: "line",
-                        dataPoints: [
-                        @foreach (var item in Model) {
-                        <text>
-                            { x: @item.ID, y: @item.Content },
-                        </text>
-                        }
-                    ],
-                }
-                ]
-            });
-            chart.render();
-        };
-</script>

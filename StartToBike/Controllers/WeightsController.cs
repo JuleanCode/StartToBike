@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StartToBike.Data;
 using StartToBike.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace StartToBike.Controllers
 {
@@ -155,6 +156,35 @@ namespace StartToBike.Controllers
         private bool WeightExists(int id)
         {
             return _context.Weights.Any(e => e.ID == id);
+        }
+
+        public async Task<IActionResult> UserWeight()
+        {
+            var startToBikeContext = _context.Weights.Include(w => w.User).Where(d => d.UserID == Int32.Parse(HttpContext.Session.GetString("CurentUserID")));
+            return View(await startToBikeContext.ToListAsync());
+        }
+
+        public IActionResult UserAddWeight()
+        {
+            return View();
+        }
+
+        // POST: Weights/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserAddWeight([Bind("ID,Content")] Weight weight)
+        {
+            weight.UserID = Int32.Parse(HttpContext.Session.GetString("CurentUserID"));
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(weight);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(UserWeight));
+            }
+            return View(weight);
         }
     }
 }
